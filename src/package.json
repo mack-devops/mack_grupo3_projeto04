@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.26.1",
+    "query-string": "^7.1.1",
     "rocketchat-api": "^1.0.5"
   }
 }

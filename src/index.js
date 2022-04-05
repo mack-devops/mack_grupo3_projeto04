@@ -1,4 +1,5 @@
 const RocketChatApi = require('rocketchat-api')
+const axios = require('axios')
 
 const myUsername = '<USERNAME>'
 const myPassword = '<PASSWORD>'
@@ -13,19 +14,19 @@ class RocketChat {
         this.botPassword = "StrongPassword"
     }
 
-    async checkLogin () {
-        if (this.login === false){
+    async checkLogin() {
+        if (this.login === false) {
             await Promise.resolve(this.rocketChatClient.login(this.username, this.password))
             this.login = true
         }
     }
 
-    async sendAsync (roomId, message) {
+    async sendAsync(roomId, message) {
         await this.checkLogin()
-        return await Promise.resolve(this.rocketChatClient.chat.postMessage({ roomId : roomId, text : message }))
+        return await Promise.resolve(this.rocketChatClient.chat.postMessage({ roomId: roomId, text: message }))
     }
 
-    async createBotUserAsync () {
+    async createBotUserAsync() {
         const userToAdd = {
             "name": "My Alert Bot",
             "email": "myalertbot@mydomain.com",
@@ -35,13 +36,13 @@ class RocketChat {
             "joinDefaultChannels": false,
             "verified": false,
             "requirePasswordChange": false,
-            "roles":["user"]
+            "roles": ["user"]
         };
-        
+
         try {
             await this.checkLogin()
             await Promise.resolve(this.rocketChatClient.users.create(userToAdd))
-        } catch (error) {}
+        } catch (error) { }
     }
 
     async getChannelsAsync() {
@@ -56,7 +57,7 @@ class RocketChat {
         return response.channel
     }
 
-    loginWithBot () {
+    loginWithBot() {
         this.username = this.botUsername
         this.password = this.botPassword
         this.login = false
@@ -84,15 +85,30 @@ async function main() {
         channel = await rocketChat.createNewChannelAsync(channelName)
         channelId = channel._id
     }
-    
+
     console.log("[LOG] Criando um usuário para o Bot")
     await rocketChat.createBotUserAsync()
 
     console.log("[LOG] Logando com o usuário do Bot")
     rocketChat.loginWithBot()
-    
-    console.log("[LOG] Enviando mensagem no channel do bot")
-    await rocketChat.sendAsync(channelId, "[WARNING] THE APPLICATION XPTO SHUTDOWN")
+
+    axios
+        .get('http://localhost:5147/health_check')
+        .then(res => {
+            //console.log(`statusCode: ${res.status}`)
+            if (res.status == 200) {
+                console.log('API ONLINE - STATUS ' + res.status)
+                await rocketChat.sendAsync(channelId, "[SUCCESS] THE APPLICATION XPTO ONLINE")
+            } else {
+                console.log('API ERROR - STATUS ' + res.status)
+                await rocketChat.sendAsync(channelId, "[WARNING] THE APPLICATION XPTO ERROR")
+            }
+        })
+        .catch(error => {
+            //console.error(error)
+            console.log('API ERROR - OFFLINE')
+            await rocketChat.sendAsync(channelId, "[WARNING] THE APPLICATION XPTO SHUTDOWN")
+        })
 
     console.log("[LOG] Fim da aplicação")
 }
