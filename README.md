@@ -23,9 +23,12 @@ DOECS é uma das maiores empresas de dados do Brasil, e eles estão implementand
 --> APP desenvolvido em NODEJS
 > https://nodejs.org/en/download/
 
-Executar comandos:
+Instalação de dependências:
 	$ npm install
 	$ npm install axios (https://github.com/axios/axios#installing)
+
+Executar projeto:
+    $ npm start
 ````
 
 ### API
