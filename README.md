@@ -24,8 +24,8 @@ DOECS é uma das maiores empresas de dados do Brasil, e eles estão implementand
 > https://nodejs.org/en/download/
 
 Instalação de dependências:
-	$ npm install
-	$ npm install axios (https://github.com/axios/axios#installing)
+    $ npm install
+    $ npm install axios (https://github.com/axios/axios#installing)
 
 Executar projeto:
     $ npm start
@@ -39,7 +39,7 @@ Executar projeto:
 > https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 
 Executar projeto:
-	$ dotnet run
+    $ dotnet run
 ````
 
 
