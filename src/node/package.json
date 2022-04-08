@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.26.1",
     "query-string": "^7.1.1",
+    "rocketchat": "^0.57.3-alpha",
     "rocketchat-api": "^1.0.5"
   }
 }
