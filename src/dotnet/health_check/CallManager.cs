@@ -19,7 +19,7 @@ namespace health_check
 
 		private bool CheckEndpoint(string endpoint)
 		{
-			new LineColor().Bold($"--> {DateTime.Now} || Checking");
+			new LineColor().Bold($"--> {DateTime.Now} || Checking <--");
 			new LineColor().PrintResult($"--> {DateTime.Now} || {endpoint}", StatusScreen.Loading);
 
 			var respApi = new HttpRequester().Get(endpoint);
@@ -37,7 +37,7 @@ namespace health_check
 
 		private bool SendLogRocketChat(string endpoint, string statusEndpoint, string rocketchatServer)
 		{
-			new LineColor().Bold($"--> {DateTime.Now} || Sending Log");
+			new LineColor().Bold($"--> {DateTime.Now} || Sending Log <--");
 			new LineColor().PrintResult($"--> {DateTime.Now} || Sending Log -> {rocketchatServer}", StatusScreen.Loading);
 
 			string jsonMsg = $"[API] {endpoint} --> {statusEndpoint} || {DateTime.Now}";

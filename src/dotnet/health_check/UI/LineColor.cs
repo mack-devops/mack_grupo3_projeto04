@@ -46,9 +46,8 @@
 
 		public void Bold(string outputMsg)
 		{
-			Console.ForegroundColor = ConsoleColor.Black;
-			Console.BackgroundColor = ConsoleColor.White;
-			Console.WriteLine("\n\n" + outputMsg);
+			Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"\n {outputMsg}");
 			Console.ResetColor();
 		}
 
