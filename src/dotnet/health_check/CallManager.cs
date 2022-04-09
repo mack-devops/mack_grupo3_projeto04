@@ -6,7 +6,7 @@ namespace health_check
 {
     public class CallManager
     {
-        public void Main(string endpoint, string rocketChatServer)
+        public bool Main(string endpoint, string rocketChatServer, bool lastStatus)
         {
             bool statusEndpoint = false;
 
@@ -17,14 +17,28 @@ namespace health_check
             catch (Exception ex)
             {
                 new LineColor().PrintResult($"API OFFLINE --> {ex.Message}", StatusScreen.Error);
-                SendLogRocketChat(endpoint, "OFFLINE", rocketChatServer, ex.Message);
-                return;
+
+                if (statusEndpoint != lastStatus)
+                    SendLogRocketChat(endpoint, "OFFLINE", rocketChatServer, ex.Message);
+
+                return false;
             }
 
-            if (statusEndpoint)
-                SendLogRocketChat(endpoint, "ONLINE", rocketChatServer);
-            else
-                SendLogRocketChat(endpoint, "OFFLINE", rocketChatServer);
+            if (statusEndpoint != lastStatus)
+            {
+                if (statusEndpoint)
+                {
+                    SendLogRocketChat(endpoint, "ONLINE", rocketChatServer);
+                    return true;
+                }
+                else
+                {
+                    SendLogRocketChat(endpoint, "ERROR", rocketChatServer);
+                    return false;
+                }
+            }
+
+            return lastStatus;
         }
 
         private bool CheckEndpoint(string endpoint)
@@ -42,7 +56,7 @@ namespace health_check
             }
             else
             {
-                new LineColor().PrintResult($"API OFFLINE --> Code Status = {respApi.StatusCode}", StatusScreen.Error);
+                new LineColor().PrintResult($"API ERROR --> Code Status = {respApi.StatusCode}", StatusScreen.Error);
                 return false;
             }
         }
@@ -51,7 +65,6 @@ namespace health_check
         {
             new LineColor().Bold($"--> {DateTime.Now} || Sending Log <--");
             new LineColor().PrintResult($"--> {DateTime.Now} || Sending Log -> {rocketchatServer}", StatusScreen.Loading);
-			var respApi = new HttpResponseMessage();
 
             string jsonMsg = $"[API] {endpoint} --> {statusEndpoint} || {excepionMessage} {DateTime.Now}";
             string payload = "{\"text\": \"" + jsonMsg + "\"}";
